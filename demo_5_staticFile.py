@@ -2,7 +2,7 @@ from flask import Flask, url_for
 
 
 # ============
-# 静态文件
+# 静态文件（url_for('static',filename=)）
 # ============
 
 # 动态的文件一般也需要静态文件，例如CSS样式表和JavaScript文件。

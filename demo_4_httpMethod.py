@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 
 # =======
-# HTTP 请求方法
+# HTTP 请求方法(route('/',methods=['GET','POST']))
 # =======
 
 # Web应用会通过不同的HTTP方法发送请求（不同的HTTPo方法处理URL）

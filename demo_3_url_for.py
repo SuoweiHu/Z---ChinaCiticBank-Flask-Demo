@@ -2,7 +2,7 @@
 from flask import Flask, escape, url_for
 
 # =======
-# URL 构建
+# URL 构建 (url_for)
 # =======
 
 # url_for 函数用于构建制定函数的URL，第一个参数为函数名字

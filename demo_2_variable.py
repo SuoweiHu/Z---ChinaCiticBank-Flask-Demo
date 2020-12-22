@@ -13,7 +13,7 @@ app = Flask(__name__)
 #     return f"Hello, World"
 
 # ======
-# 变量规则
+# 变量规则 (route('/user/<username>'))
 # =======
 
 # 通过把 URL 的一部分标记为 <variable_name> 就可以在 URL 中添加变量。

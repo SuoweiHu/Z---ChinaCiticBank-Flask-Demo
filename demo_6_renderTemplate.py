@@ -4,26 +4,44 @@ app = Flask(__name__)
 
 index_page = """
     <h1>Static Page</h1>
-    <form action="/dynamic" method="get">
+    <form action="/static" method="get">
         <input type="submit" value="Go">
     </form>
-
+    <br><hr><br>
     <h1>Dynamic Page</h1>
     <form action="/dynamic" method="get">
         <input type="submit" value="Go">
     </form>
-
-    <h1>Dynamic Page (With HTTP "Get" method passing param)</h1>
-    <form action="/dynamic_param" method="get">
-        First Name: <input type="text" name="f_name" id=""><br>
-        Last Name: <input type="text" name="l_name" id=""><br>
+    <br><hr><br>
+    <h1>Dynamic Page (Pass variable by instance of class)</h1>
+    <form action="/dynamic/class" method="get">
         <input type="submit" value="Go">
     </form>
+    <br><hr><br>
+    <h1>Dynamic Page (with partial usage of jinja2 engine)</h1>
+    <form action="/hello/Simon/Hamston" method="get">
+        <input type="submit" value="Go">
     """
+    # </form>
+    # <br><hr><br>
+    # <h1>Dynamic Page (With HTTP "Get" method passing param)</h1>
+    # <form action="/dynamic/param" method="get">
+    #     First Name: <input type="text" name="f_name" id=""><br>
+    #     Last Name: <input type="text" name="l_name" id=""><br>
+    #     <input type="submit" value="Go">
+    # </form>
+    # <br><hr><br>
+    # <h1>Dynamic Page (With HTTP "Post" method passing param)</h1>
+    # <form action="/dynamic/param" method="post">
+    #     First Name: <input type="text" name="f_name" id=""><br>
+    #     Last Name: <input type="text" name="l_name" id=""><br>
+    #     <input type="submit" value="Go">
+    # </form>
+    # """
 
 
 # =======
-# 渲染模版
+# 渲染模版（render_template）
 # =======
 
 # 在 Python 内部写 HTML 文件并不简单，你需要自己做 HTML 转义
@@ -56,19 +74,32 @@ def render_static():
 def render_dynamic():
     # 要使用模板，在render_template参数中以key=value形式传入变量，
     # 在html中使用{{key}}来显示传入的变量
-    return render_template("demo_6_dynamic.html",  # HTML 模版文件   
-        f_name="Simon", l_name="Hamston")  # 刚刚从 GET 请求获得的字段
+    print("stuff " * 10)
+    return render_template("demo_6_dynamic_1.html",f_name="Simon", l_name="Hamston") 
 
 # 2. 入参模版 (类)
-@app.route('/dynamic/classParam')
+class Student:
+    def __init__(self, f_name, l_name):
+        self.f_name = f_name
+        self.l_name = l_name
+
+@app.route('/dynamic/class')
 def remder_dynamic_classParam():
     # 也可以将一个类的实例传过去，然后在模版中访问类的属性
-    return render_template("demo_6_dynamic.html")
+    student = Student("Simon", "Hamston")
+    return render_template("demo_6_dynamic_2.html", student=student)
+
+# 3. 其他Jinja2模版引擎功能示范
+@app.route('/hello/')
+@app.route('/hello/<f_name>/<l_name>')
+def hello(f_name, l_name):
+    name = f_name + " " + l_name
+    return render_template('demo_6_jinja2.html', name=name)
 
 
-# （等到学会了Request再回来弄这个）
-# # 2. 入参模版
-# @app.route('/dynamic', methods=["GET", "POST"])
+# # 3. 入参模版(通过HTTP请求获得数据)
+# （等到学会了Request再回来弄这个吧，现在学好像就在磨洋工浪费时间）
+# @app.route('/dynamic/param', methods=["GET", "POST"])
 # def render_dynamic():
 #     print(request.form)
 #     print("-"*20)
@@ -81,9 +112,6 @@ def remder_dynamic_classParam():
 
 if __name__ == '__main__':
     app.run()
-
-
-
 
 # 1：简单模版的HTML文件
 # <!DOCTYPE html>
@@ -101,4 +129,40 @@ if __name__ == '__main__':
 # </body>
 # </html>
 
-# 2：入参模版的HTML文件
+# 2：入参模版的HTML文件 1
+# <!DOCTYPE html>
+# <html lang="en">
+# <head>
+#     <meta charset="UTF-8">
+#     <title>Index</title>
+# </head>
+# <body>
+# <h1>This is index page</h1>
+# <h2>First Name: {{f_name}}</h2>
+# <h2>Last Name: &nbsp;{{l_name}}</h2>
+# </body>
+# </html>
+
+# 2：入参模版的HTML文件 2
+# <!DOCTYPE html>
+# <html lang="en">
+# <head>
+#     <meta charset="UTF-8">
+#     <title>Index</title>
+# </head>
+# <body>
+# <h1>This is index page</h1>
+# <h2>First Name: {{student.f_name}}</h2>
+# <h2>Last Name: &nbsp;{{student.l_name}}</h2>
+# </body>
+# </html>
+
+
+# 3: Jinja2 
+# <!doctype html>
+# <title>Hello from Flask</title>
+# {% if name %}
+#   <h1>Hello {{ name }}!</h1>
+# {% else %}
+#   <h1>Hello, World!</h1>
+# {% endif %}
