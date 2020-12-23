@@ -30,7 +30,7 @@ def print_name():
 #   C:\path\to\app>set FLASK_APP=hello.py
 # WIN (Power Shell)
 #   PS C:\path\to\app> $env:FLASK_APP = "hello.py"
-#
+
 # 应该得到的返回
 #   Running on http://127.0.0.1:5000/
 
